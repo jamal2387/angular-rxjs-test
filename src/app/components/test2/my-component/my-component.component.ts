@@ -23,7 +23,7 @@ export class MyComponentComponent implements OnInit {
 
   displayText = 'default';
 
-  compositeValue = combineLatest([this.partB, this.partA, this.partC])
+  compositeValue = combineLatest([this.partA, this.partB, this.partC.pipe(map((arr) => arr.reduce((a, b) => a + b, 0)))])
     .pipe(map(([a, b, c]) => {
       return `${a}.${b}.${c}`
     }))
@@ -37,7 +37,6 @@ export class MyComponentComponent implements OnInit {
       this.partC.next([1, 2, 3, 4])
     }, 4000)
     //do not remove or relocate
-
 
     return firstValueFrom(this.activatedRoute.data
       .pipe(

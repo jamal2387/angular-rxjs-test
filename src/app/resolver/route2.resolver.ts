@@ -4,7 +4,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable, of } from 'rxjs';
-import { concatMap, filter, map, tap } from 'rxjs/operators';
+import { concatMap, filter, map, tap, first } from 'rxjs/operators';
 import { LoadingSpinnerOverlayService } from '../services/loading-spinner-overlay.service';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class CustomRouteDataResolver2 implements Resolve<string> {
         tap(() => this.loadingSpinner.show()),
         concatMap(([{ id }, { j }]) => forkJoin([
           this.completionNotifier$
-            .pipe(filter(v => v === true)),
+            .pipe(filter(v => v === true), first()),
           of(`${id}-${j}`)
         ])),
         tap(() => this.loadingSpinner.hide()),
