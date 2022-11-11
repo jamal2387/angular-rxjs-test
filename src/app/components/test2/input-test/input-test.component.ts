@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { concatMap, filter, first, map, mergeAll, Subject, tap, toArray } from 'rxjs';
+import { concatMap, filter, first, map, mergeAll, Subject, tap, toArray, of } from 'rxjs';
 
 @Component({
   selector: 'app-input-test',
@@ -64,7 +64,7 @@ export class InputTestComponent implements AfterContentInit {
 
   //do not remove alter or relocate
   deltaUpdater = setInterval(() => {
-    const v = this.getRandomIntInclusive(0, 100);
+    const v = getRandomIntInclusive(0, 100);
     //the delta value MUST update twice per second while viewing this page
     this.delta$.next(v);
     if (v > 50) {
