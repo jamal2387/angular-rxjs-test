@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { concatMap, filter, first, map, mergeAll, Subject, tap, toArray, of } from 'rxjs';
+import { concatMap, filter, first, map, mergeAll, Subject, tap, toArray, of, distinct } from 'rxjs';
 
 @Component({
   selector: 'app-input-test',
@@ -29,12 +29,11 @@ export class InputTestComponent implements AfterContentInit {
 
   filteredData$ = this.query$
     .pipe(
-      map(q => q.toUpperCase()),
+      map(q => q.toLowerCase()),
       concatMap((q) => this.testData
         .pipe(
           mergeAll(),
           filter(({ tags }) => tags.indexOf(q) > -1),
-          first(),
           toArray(),
         )),
     );
@@ -44,11 +43,13 @@ export class InputTestComponent implements AfterContentInit {
       mergeAll(),
       map(({ tags }) => tags),
       mergeAll(),
+      distinct(),
       toArray()
     );
 
   constructor(private activatedRoute: ActivatedRoute) {
     console.log(`InputTestComponent ctor`);
+    clearInterval(this.deltaUpdater)
   }
 
   async ngAfterContentInit() {
@@ -57,7 +58,7 @@ export class InputTestComponent implements AfterContentInit {
       .pipe(
         first(),
         tap(({ q }) => { this.queryInput.nativeElement.value = q; }),
-      )
+      ).subscribe()
 
   }
 
